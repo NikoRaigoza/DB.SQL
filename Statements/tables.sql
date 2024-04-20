@@ -60,3 +60,32 @@ SELECT dni.user_id, dni.user_id
 FROM dni
 RIGHT JOIN users
 ON users.user_id = dni.user_id;
+
+-- INDEX
+
+CREATE INDEX idx_name ON users(name);
+
+CREATE UNIQUE INDEX idx_name2 ON users(name, surname);
+
+DROP INDEX idx_name ON users;
+
+-- TRIGGER
+
+CREATE TRIGGER tg_emailtg_email
+AFTER UPDATE ON users
+FOR EACH ROW 
+BEGIN
+	IF OLD.email <> NEW.email THEN
+		INSERT INTO email_history (user_id, email)
+        VALUES(OLD.user_id, OLD.email);
+	END IF;
+END;
+
+DROP TRIGGER tg_email;
+
+-- VIEWS
+
+CREATE VIEW v_adult_users AS
+SELECT name, age
+FROM users
+WHERE age >= 18;
